@@ -1,2 +1,12 @@
 # 2020-cov-test-frequency
-Analysis of frequency vs sensitivity of SARS-CoV-2 tests
+
+Code for estimating test sensitivity against test frequency for detection. _Note: this is working repository, so code and data are likely to change over time_
+
+### Quick start guide
+
+First, set local path in R to GitHub directory, e.g.:
+`
+setwd("~/Documents/GitHub/2020-cov-test-frequency/")
+`
+
+Main model run script is in `R/testing_model.r`.
