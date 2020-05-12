@@ -1,6 +1,6 @@
 # 2020-cov-test-frequency
 
-Code for estimating test sensitivity against test frequency for detection. _Note: this is working repository, so code and data are likely to change over time_
+Code for estimating test sensitivity against test frequency for detection.
 
 ### Quick start guide
 
