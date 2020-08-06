@@ -1,13 +1,12 @@
 # 2020-cov-test-frequency
 
-Code for analysis of screening tests.
+Code for analysis of screening tests for SARS-CoV-2.
 
 ### Quick start guide for model
 
 First, set local path in R to GitHub directory, e.g.:
-`
-setwd("~/Documents/GitHub/2020-cov-test-frequency/")
-`
+`setwd("~/Documents/GitHub/2020-cov-test-frequency/")`
+
 Main model run script is in `R/testing_model.r`.
 
 ### Schematic of testing and key delays
