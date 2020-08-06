@@ -13,15 +13,17 @@ col_def <-   list(col1="dark grey",col2=rgb(0.9,0.7,0),col3=rgb(0,0,0.8),col4=rg
 
 # Define functions ----------------------------------------------
 
+# Incubation period
 incubation_p <- 5
 
-scale_p <- 2
-shift_p <- 0
+#scale_p <- 2
+#shift_p <- 0
 #period_infectious <- function(x){dgamma(x+shift_p,shape=mean_p/scale_p,scale=scale_p)}
 
 #xx1 <- seq(0,14,0.1)
 #plot(xx1,sapply(xx1,period_infectious))
 
+# Probability of testing positive
 pos_test <- function(x){
   if(x<4){y=min(1,0.25*x)}
   if(x>=4 & x<10){y=1.0}
@@ -110,7 +112,7 @@ for(ii in 1:length(day_list)){
 title(LETTERS[3],adj=0)
 
 # Output figure
-dev.copy(png,paste0("outputs/test_freq.png"),units="cm",width=8,height=20,res=150)
+dev.copy(png,paste0("test_freq.png"),units="cm",width=8,height=20,res=150)
 dev.off()
 
 
