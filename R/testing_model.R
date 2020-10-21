@@ -13,23 +13,80 @@ col_def <-   list(col1="dark grey",col2=rgb(0.9,0.7,0),col3=rgb(0,0,0.8),col4=rg
 
 # Define functions ----------------------------------------------
 
-# Incubation period
+# Mean incubation period
 incubation_p <- 5
-
-#scale_p <- 2
-#shift_p <- 0
-#period_infectious <- function(x){dgamma(x+shift_p,shape=mean_p/scale_p,scale=scale_p)}
-
-#xx1 <- seq(0,14,0.1)
-#plot(xx1,sapply(xx1,period_infectious))
 
 # Probability of testing positive
 pos_test <- function(x){
-  if(x<4){y=min(1,0.25*x)}
-  if(x>=4 & x<10){y=1.0}
-  if(x>=10){y=max(1-0.2*(x-10),0)}
+  if(x<4){y=min(0.8,0.25*x)}
+  if(x>=4 & x<8){y=0.8}
+  if(x>=8){y=max(0.8-0.2*(x-8),0)}
   y
 }
+
+# Incubation period  distribution
+inc_cumulative <- function(x){pgamma(x,shape = incubation_p, scale = 1) }
+inc_probability <- function(x){dgamma(x,shape = incubation_p, scale = 1) }
+
+
+# Calculate probability of detection ----------------------------------------------
+
+detection_prob <- function(freqX, # frequency of testing
+                           detect_within = 7, # period aiming to detect within
+                           delay_to_result = 2, # delay to result
+                           prop_symp = 0.6 # proportional symptomatic (set to 0 for asymptomatic testing only)
+                           ){
+  
+  
+  #DEBUG:  detect_within = 7; delay_to_result = 2; freqX = 7; prop_symp = 0.6
+  
+  # Define effective period aiming for detection (accounting for delay to result)
+  e_detect_within <- detect_within - delay_to_result
+  
+  # Define possible days at which could be detected
+  seq_detect <- (1:e_detect_within)
+  
+  # - - -
+  # Calculate probabilty detect symptomatic individuals - iterate over each possible day of onset
+  store_data_symp <- NULL
+  
+  for(ii in 1:e_detect_within){
+    
+    # Full equation for onset on given day:
+    # (1-[1-P(onset on day X)*P(test positive | onset)]*[1-P(detected by screening by day X)] )
+  
+    # P(onset by day X)*P(test positive | onset)
+    prob1 <- inc_probability(ii)*pos_test(ii)
+    
+    # P(detected by screening by day X)
+    prob2 <- 1-prod(1-sapply(1:ii,pos_test)/freqX)
+    
+    # Collect together:
+    detect_if_symp <- (1-(1-prob1)*(1-prob2))
+      
+    # Store values
+    store_data_symp <- c(store_data_symp,detect_if_symp)
+  
+  }
+  
+  detect_symp_total <- 1-prod(1-store_data_symp) # Estimate overall probability detect
+  
+  
+  # - - -
+  # Calculate probabilty detect asymptomatic individuals
+
+  # P(detected by screening by day X)
+  detect_apresymp_total <- 1-prod(1-sapply(1:e_detect_within,pos_test)/freqX)
+
+  # - - -
+  # Collate symptomatic and asymptomatic:
+  probability_detect <- prop_symp*detect_symp_total + (1-prop_symp)*detect_apresymp_total
+  
+  probability_detect
+  
+}
+
+
 
 
 # Calculate probability of detection ----------------------------------------------
